@@ -10,7 +10,7 @@ const authenticateJWT = (req, res, next) => {
             if (err) {
                 return res.status(403).send({ err: "token sai" });
             }
-            console.log(payload);
+            //console.log(payload);
             let user = await User.findById(payload._id).exec()
             req.authenticateUser = user
             next();

@@ -4,7 +4,7 @@ const User = require('../model/User')
 const bcrypt = require('bcrypt')
 const constants = require('../constants')
 const RequestChat = require('../model/RequestChat')
-const WattingAccept = require('../model/WattingAccept')
+const WaittingAccept = require('../model/WaittingAccept')
 const mongoose = require('mongoose')
 const { json } = require('express')
 //Get all User
@@ -17,20 +17,68 @@ router.get('/all-user', (req, res) => {
     }
 })
 //Get user by Id
-router.get('/:id',async (req, res) => {
+router.get('/:id', async (req, res) => {
     const authId = req.authenticateUser._id
-    const check = await User.findById(authId)
+    //const check = await User.findById(authId)
     //console.log(check);
     const id = { _id: req.params.id }
     if (!id) {
         res.status(400).send({ messError: 'not found id' })
-    } else {
-        User.findById(id).exec((err, user) => {
+    } else if (authId == req.params.id) {
+        User.findById(id).populate([
+            {
+                path: 'requests',
+                populate: [
+                    {
+                        path: 'user',
+                        select: ['name,avatar']
+                    },
+                    {
+                        path: 'chatID',
+                        select: 'name'
+                    }
+                ],
+                select:"updateAt",
+                options:{
+                    sort:{'updateAt':-1}
+                }
+            },
+            {
+                path: 'waitting',
+                populate: [
+                    {
+                        path: 'user',
+                        select: ['name,avatar']
+                    },
+                    {
+                        path: 'chatID',
+                        select: 'name'
+                    }
+                ],
+                select:"updateAt",
+                options:{
+                    sort:{'updateAt':-1}
+                }
+            },
+            {
+                path: 'chat',
+                populate: [{
+                    path: 'members',
+                    select: ['name', 'email']
+                }
+                ],select:"updateAt",
+                options:{
+                    sort:{'updateAt':-1}
+                }
+            }
+        ]).exec((err, user) => {
             if (err) throw err
-            console.log(JSON.stringify(user));
             res.json(user)
         })
+    } else {
+        res.status(401).send({ "err": "Au" })
     }
+
 })
 
 //Update Password
@@ -103,7 +151,7 @@ router.post('/request-chat/:id', async (req, res) => {
             user: authId,
             chatID: req.body.chatID
         })
-        let wattingAccept = new WattingAccept({
+        let waittingAccept = new WaittingAccept({
             _id: requestChat._id,
             user: id,
             chatID: req.body.chatID
@@ -112,9 +160,9 @@ router.post('/request-chat/:id', async (req, res) => {
             if (err) throw err
             console.log('requests saved');
         })
-        wattingAccept.save((err) => {
+        waittingAccept.save((err) => {
             if (err) throw err
-            console.log('watting saved');
+            console.log('waitting saved');
         })
         User.findByIdAndUpdate(id, {  // push to field requests of user1
             $push: { requests: requestChat._id }
@@ -122,8 +170,8 @@ router.post('/request-chat/:id', async (req, res) => {
             if (err) return res.status(404).send({ 'err': err })
         })
         User.findByIdAndUpdate(authId, { // push to field requests of authID
-            $push: { watting: wattingAccept._id }
-        }, { new: true }).exec((err,result) => {
+            $push: { waitting: waittingAccept._id }
+        }, { new: true }).exec((err, result) => {
             if (err) return res.status(404).send({ 'err': err })
             res.json(result)
         })

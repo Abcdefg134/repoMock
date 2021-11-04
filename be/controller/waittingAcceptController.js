@@ -1,17 +1,17 @@
 const express = require('express')
-const WattingAccept = require('../model/WattingAccept')
+const WaittingAccept = require('../model/WaittingAccept')
 const router = express.Router()
 
 
-//Delete watting
+//Delete waitting
 
 router.delete('/delete/:id', async (req, res) => {
-    const id = { _id: req.params.id } // id of wattingAccept
+    const id = { _id: req.params.id } // id of waittingAccept
     const authId = req.authenticateUser._id
-    const wattingAccept = await WattingAccept.findById(id)
-    const check = Boolean(wattingAccept.user == authId)
+    const waittingAccept = await WaittingAccept.findById(id)
+    const check = Boolean(waittingAccept.user == authId)
     if (check) {
-        WattingAccept.findByIdAndDelete(id, (err) => {
+        WaittingAccept.findByIdAndDelete(id, (err) => {
             if (err) {
                 console.log(err);
             } else {

@@ -23,6 +23,10 @@ router.get('/:id', async (req, res) => {
                     populate: {
                         path: 'user',
                         select: ['name,avatar']
+                    },
+                    select:['updateAt','message'],
+                    options:{
+                        sort:{'updateAt':-1}
                     }
                 },
                 {
@@ -31,6 +35,9 @@ router.get('/:id', async (req, res) => {
                 }, {
                     path: 'members',
                     select: ['name', 'avatar']
+                },{
+                    path:'members',
+                   select:['name','avatar']
                 }
             ])
             .exec((err, groupChat) => {
@@ -42,6 +49,8 @@ router.get('/:id', async (req, res) => {
     }
 })
 // accept request
+//Requests in user need to accept
+//Waitting in user gave request
 router.post('/accept-request/:id', async (req, res) => {
     const id = { _id: req.params.id } // id of the requestChat
     const authId = req.authenticateUser._id // id user after login
@@ -66,7 +75,7 @@ router.post('/accept-request/:id', async (req, res) => {
                 if (err) throw err
             })
             User.findByIdAndUpdate(chatRequestInfo.user, {
-                $pull: { watting: req.params.id }
+                $pull: { waitting: req.params.id }
             }, { new: true }).exec((err, result) => {
                 if (err) throw err
                 res.json(result)
@@ -79,11 +88,11 @@ router.post('/accept-request/:id', async (req, res) => {
                     chatRequestInfo.user, authId
                 ],
                 messages: [],
-                mod: id,
+                mod: chatRequestInfo.user,
                 name: ''
             })
             //if (check) {
-            body.save((err,chat) => {
+            body.save((err, chat) => {
                 if (err) throw err
                 console.log('Group chat saved');
                 res.json(chat)
@@ -95,7 +104,7 @@ router.post('/accept-request/:id', async (req, res) => {
                 if (err) throw err
             })
             User.findByIdAndUpdate(chatRequestInfo.user, {
-                $pull: { watting: req.params.id },
+                $pull: { waitting: req.params.id },
                 $push: { chat: body._id }
             }, { new: true }).exec((err) => {
                 if (err) throw err
@@ -103,14 +112,39 @@ router.post('/accept-request/:id', async (req, res) => {
             })
         }
     } else {
-        res.status(403).send({ "err": "Au" })
+        res.status(403).send({ err: "Au" })
     }
 })
 
 
 //Denied request
 
+router.post('/denied-request/:id', async (req, res) => {
+    const id = { _id: req.params.id } // id of the requestChat
+    const authId = req.authenticateUser._id // id user after login
+    const user = await User.findById(authId) // info user after login
+    const convertUserToJson = JSON.parse(JSON.stringify(user))
+    console.log(convertUserToJson.requests);
+    console.log(id);
+    let check = convertUserToJson.requests.includes(req.params.id) // check 
+    console.log(check);
+    let chatRequestInfo = await RequestChat.findById(id)
+    if (check) {
+        User.findByIdAndUpdate(authId, {
+            $pull: { requests: req.params.id }
+        }, { new: true }).exec((err) => {
+            if (err) throw err
+        })
+        User.findByIdAndUpdate(chatRequestInfo.user, {
+            $pull: { waitting: req.params.id }
+        }, { new: true }).exec((err, result) => {
+            if (err) throw err
+            res.json(result)
+        })
+    } else {
+        res.status(403).send({ err: "Au" })
+    }
+})
 
-/*Buổi chiều chỉnh lại các router:Request chat, Accept request. Hoàn thành add-member*/
 
 module.exports = router

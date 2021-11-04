@@ -54,8 +54,7 @@ router.post('/login', async (req, res) => {
         const accessToken = jwt.sign({ email: user.email, _id: user._id }, process.env.SECRET_KEY)
         let userInfor = {
             email: user.email,
-            _id: user._id,
-            token: accessToken
+            _id: user._id
         }
         return [
             res.status(202).cookie('token', accessToken, { httpOnly: true, expires: new Date(Date.now() + 2000 * 24 * 60 * 60 * 1000) }),
@@ -68,8 +67,12 @@ router.post('/login', async (req, res) => {
 
 //Check login
 router.get('/checkLogin', authenMiddleware.authenticateJWT, (req, res) => {
-    console.log(req.cookies)
-    return res.send(true)
+    //console.log(req.cookies)
+
+    return res.send({
+        status: true,
+        _id: req.authenticateUser._id
+    })
 })
 
 //Load file

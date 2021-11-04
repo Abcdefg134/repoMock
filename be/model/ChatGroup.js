@@ -20,6 +20,6 @@ var chatGroupSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     }
-})
+},{timestamps:true})
 var ChatGroup = mongoose.model('ChatGroup', chatGroupSchema)
 module.exports = ChatGroup

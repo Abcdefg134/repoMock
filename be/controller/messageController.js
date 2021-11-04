@@ -6,13 +6,12 @@ const path = require('path')
 const constants = require('../constants')
 const ChatGroup = require('../model/ChatGroup')
 //Send message
-router.post('/send', constants.upload.single('img'), async (req, res) => {
+router.post('/send', constants.upload.single('message'), async (req, res) => {
     const authId = req.authenticateUser._id
     let message = new Message({
         _id: new mongoose.Types.ObjectId(),
         user: authId,
-        message: req.body.message,
-        img: req.file?.path,
+        message: req.file ? req.file.path : req.body.message,
         groupId: req.body.groupId
     })
 
@@ -46,15 +45,16 @@ router.delete('/delete/:id', async (req, res) => {
     const message = await Message.findById(id)
     let check = false
     if (message) {
-        const groupChat = await ChatGroup.findById(message.groupId)
+        const convertMessage = JSON.parse(JSON.stringify(message))
+        const groupChat = await ChatGroup.findById(convertMessage.groupId)
         if (groupChat) {
-            check = Boolean(groupChat.mod == authId)
+            const convertGroupChat = JSON.parse(JSON.stringify(groupChat))
+            check = Boolean(convertGroupChat.mod == authId)
             console.log(check);
         }
     }
     if (check) {
-
-        Message.findByIdAndDelete(id, (err, docs) => {
+        Message.findByIdAndDelete(id, (err) => {
             if (err) {
                 console.log(err);
             } else {
@@ -62,7 +62,7 @@ router.delete('/delete/:id', async (req, res) => {
             }
         })
         ChatGroup.findByIdAndUpdate(message.groupId, {
-            $pull: { messages: id }
+            $pull: { messages: req.params.id }
         }, { new: true }).exec((err) => {
             if (err) throw err
         })

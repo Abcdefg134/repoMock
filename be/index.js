@@ -20,7 +20,7 @@ const AuthRouter = require('./controller/authController');
 const GroupChatRouter = require('./controller/groupChatController')
 const MessageRouter = require('./controller/messageController')
 const RequestChatRouter = require('./controller/requestChatController')
-const WattingRouter = require('./controller/wattingAcceptController')
+const WaittingRouter = require('./controller/waittingAcceptController')
 var mongoDB = 'mongodb://localhost:27017/projectChat'
 mongoose.connect(mongoDB, function (err) {
     if (err) throw err;
@@ -33,7 +33,7 @@ app.use('/user', authenMiddleware.authenticateJWT, UserRouter)
 app.use('/chat', authenMiddleware.authenticateJWT, GroupChatRouter)
 app.use('/message', authenMiddleware.authenticateJWT, MessageRouter)
 app.use('/request', authenMiddleware.authenticateJWT, RequestChatRouter)
-app.use('/watting', authenMiddleware.authenticateJWT, WattingRouter)
+app.use('/watting', authenMiddleware.authenticateJWT, WaittingRouter)
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.listen(PORT, () => { console.log("Server started on http://localhost:" + PORT); })

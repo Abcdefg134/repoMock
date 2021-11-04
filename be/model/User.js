@@ -19,20 +19,16 @@ var userSchema = mongoose.Schema({
     },
     requests: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Request'
+        ref: 'RequestChat'
     }],
     chat: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ChatGroup'
     }],
-    watting: [{
+    waitting: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Watting'
-    }],
-    created: {
-        type: Date,
-        default: Date.now
-    }
-})
+        ref: 'WaittingAccept'
+    }]
+},{timestamps:true})
 var User = mongoose.model('User', userSchema)
 module.exports = User

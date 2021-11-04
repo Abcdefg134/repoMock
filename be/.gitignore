@@ -4,6 +4,10 @@ bin-release/
 [Oo]bj/
 [Bb]in/
 
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 # Other files and folders
 .settings/
 

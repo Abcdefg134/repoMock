@@ -5,20 +5,15 @@ var messageSchema = mongoose.Schema({
         ref: 'User',
         required: true
     },
-    mesage: {
+    message: {
         type: String,
         required: true
     },
-    img: String,
     groupId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ChatGroup',
         require: true
     },
-    created: {
-        type: Date,
-        default: Date.now,
-    }
-})
+},{timestamps:true})
 var Message = mongoose.model('Message', messageSchema)
 module.exports = Message

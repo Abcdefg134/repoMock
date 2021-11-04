@@ -8,12 +8,8 @@ const requestChatSchema = mongoose.Schema({
     chatID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ChatGroup'
-    },
-    created: {
-        type: Date,
-        default: Date.now
     }
-})
+},{timestamps:true})
 
 var RequestChat = mongoose.model('RequestChat', requestChatSchema)
 module.exports = RequestChat

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const wattingAcceptSchema = mongoose.Schema({
+const waittingAcceptSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -8,12 +8,8 @@ const wattingAcceptSchema = mongoose.Schema({
     chatID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ChatGroup'
-    },
-    created: {
-        type: Date,
-        default: Date.now
     }
-})
+},{timestamps:true})
 
-var WattingAccept = mongoose.model('WattingAccept', wattingAcceptSchema)
-module.exports = WattingAccept
+var WaittingAccept = mongoose.model('WaittingAccept', waittingAcceptSchema)
+module.exports = WaittingAccept
