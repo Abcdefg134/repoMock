@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
+    Route,useHistory,
     Link
 } from "react-router-dom";
+//import { useHistory } from 'react-router';
 import { checkLogin, getUserById } from './axios';
 import {useDispatch} from 'react-redux'
 import {GET_USER} from './actions/types'
@@ -13,6 +14,7 @@ import Main from './Main';
 import SignupScreen from './SignupScreen';
 import ChatScreen from './ChatScreen';
 export default function Navigation() {
+    let history = useHistory()
     const [check, setCheck] = useState(false)
     const [authId, setAuthId] = useState()
     const dispatch = useDispatch()
@@ -32,6 +34,11 @@ export default function Navigation() {
             })
         }
     }, [check,authId])
+    useEffect(()=>{
+        if(!authId){
+            history.push('/')
+        }
+    },[])
     return (
         <div>
             <Router>

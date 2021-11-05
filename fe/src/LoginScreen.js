@@ -1,6 +1,6 @@
 import React, {useState } from 'react'
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai"
-import { useHistory } from 'react-router'
+import { useHistory } from 'react-router-dom'
 import { login } from './axios'
 export default function LoginScreen({setCheck}) {
     let history = useHistory()

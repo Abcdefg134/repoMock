@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import ScrollToBottom from 'react-scroll-to-bottom'
-import ChatGroup from '../../be/model/ChatGroup'
+//import ChatGroup from '../../be/model/ChatGroup'
 import { getGroupChatById } from './axios'
 export default function ChatScreen() {
     const params = useParams()
@@ -32,7 +32,7 @@ export default function ChatScreen() {
     return (
         <div className="chat-screen">
             <ScrollToBottom>
-                {ChatGroup?.messages?.map(renderMessage)}
+                Hello
             </ScrollToBottom>
         </div>
     )
