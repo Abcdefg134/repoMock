@@ -16,6 +16,7 @@ export default function Main() {
             </Link> 
         )
     }
+    console.log(2);
     console.log(getUserReducer?.chat);
     return (
         <div>

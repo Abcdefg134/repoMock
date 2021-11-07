@@ -17,6 +17,7 @@ export default function ChatScreen() {
             })
         }
     }, [])
+    console.log(1);
     const getUserReducer = useSelector(state => state.getUserReducer.User)
     const renderMessageFile = ()=>{
         

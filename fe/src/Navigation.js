@@ -26,6 +26,7 @@ export default function Navigation() {
             console.log(res);
             setCheck(res.data.status)
             setAuthId(res.data._id)
+            history.push(`${localStorage.getItem('path')}`)
         }).catch(err => console.log(err))
         if(authId){
             getUserById(authId).then((res)=>{
@@ -35,6 +36,8 @@ export default function Navigation() {
         }
     }, [check,authId])
     useEffect(()=>{
+        localStorage.setItem('path' , window.location.pathname)
+        //console.log(path);
         if(!authId){
             history.push('/')
         }

@@ -27,7 +27,7 @@ export default function SignupScreen() {
                 name: 'User',
                 avatar: 'https://img.favpng.com/25/13/19/samsung-galaxy-a8-a8-user-login-telephone-avatar-png-favpng-dqKEPfX7hPbc6SMVUCteANKwj.jpg'
             }
-            signup(body).then(
+            signup(body).catch(err=>alert(err)).then(
                 alert('Đăng ký thành công')
             ).catch(err=>alert(err))
         }
