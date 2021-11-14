@@ -42,6 +42,7 @@ export default function Navigation() {
             history.push('/')
         }
     },[])
+
     return (
         <div>
             <Router>
@@ -50,7 +51,7 @@ export default function Navigation() {
                     {check == false ? (
                             <LoginScreen setCheck={loginSuccess} />) :
                         (<><Route exact path='/' component={Main} />
-                            <Route path='/chat-screen/:id' component={ChatScreen} />
+                            <Route path='/chat-screen' component={ChatScreen} />
                         </>)
                     }
                 </Switch>

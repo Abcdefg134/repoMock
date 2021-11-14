@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { useParams } from 'react-router'
 import ScrollToBottom from 'react-scroll-to-bottom'
 //import ChatGroup from '../../be/model/ChatGroup'
@@ -7,6 +8,7 @@ import { getGroupChatById } from './axios'
 export default function ChatScreen() {
     const params = useParams()
     const id = params.id
+    const history = useHistory()
     const [groupChat, setGroupChat] = useState()
     useEffect(() => {
         if (id) {
@@ -22,6 +24,9 @@ export default function ChatScreen() {
     const renderMessageFile = ()=>{
         
     }
+    const goToMain = ()=>{
+        history.push('/')
+    }
     const renderMessage = (item) => {
         return (
             <div className={item.user._id == getUserReducer._id ? 'justifyEnd' : 'justifyStart'}>
@@ -35,6 +40,7 @@ export default function ChatScreen() {
             <ScrollToBottom>
                 Hello
             </ScrollToBottom>
+            <button onClick={goToMain}>DOne</button>
         </div>
     )
 }
